@@ -37,9 +37,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)  // Отключаем CSRF
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login", "/api/auth/refresh", "api/auth/test")
+                        .requestMatchers("/api/users/register", "/api/users/login", "/api/auth/refresh")
                         .permitAll().anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessizonCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
