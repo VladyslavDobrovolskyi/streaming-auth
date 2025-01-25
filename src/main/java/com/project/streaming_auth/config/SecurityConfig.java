@@ -2,7 +2,6 @@ package com.project.streaming_auth.config;
 
 import com.project.streaming_auth.security.JwtAuthenticationFilter;
 import com.project.streaming_auth.security.JwtUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -16,15 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Value("${cors.allowed.origins}")
-    private String allowedOrigins;
 
     private final JwtUtil jwtUtil;
 
@@ -40,8 +34,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/register", "/api/users/login", "/api/auth/refresh", "/api/auth/test").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                // .cors(cors -> cors.configurationSource(corsConfigurationSource()));  // Закомментируем эту строку, чтобы отключить CORS
         return http.build();
     }
 
@@ -50,6 +44,18 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(jwtUtil);
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    // Закомментируем или удалим методы, связанные с CORS
+    /*
     @Bean
     public CorsConfiguration corsConfiguration() {
         CorsConfiguration corsConfig = new CorsConfiguration();
@@ -73,14 +79,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration());
         return source;
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+    */
 }
