@@ -1,5 +1,5 @@
 package com.project.streaming_auth.controllers;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import com.project.streaming_auth.security.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,6 @@ public class AuthController {
     public AuthController(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> testEndpoint() {
-        return ResponseEntity.ok("Hello world");
-    }
-
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@CookieValue(name = "refreshToken", required = false) String refreshToken) {
@@ -60,5 +54,4 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
     }
-    
 }
