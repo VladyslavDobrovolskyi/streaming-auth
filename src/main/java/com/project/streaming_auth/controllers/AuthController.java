@@ -21,6 +21,11 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+     @GetMapping("/test")
+    public ResponseEntity<String> testEndpoint() {
+        return ResponseEntity.ok("Hello world");
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@CookieValue(name = "refreshToken", required = false) String refreshToken) {
         if (refreshToken == null) {
@@ -54,4 +59,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
     }
+
 }
