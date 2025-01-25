@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,11 +19,6 @@ public class AuthController {
 
     public AuthController(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Test endpoint");
     }
 
     @PostMapping("/refresh")
@@ -42,6 +36,9 @@ public class AuthController {
 
         // Попытка извлечь email из refresh token
         String email = jwtUtil.extractEmailFromRefreshToken(refreshToken);
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
 
         try {
             // Генерация нового access token
