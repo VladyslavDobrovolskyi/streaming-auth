@@ -18,6 +18,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -37,11 +45,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)  // Отключаем CSRF
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/users/register")
-                        .requestMatchers("/api/users/login")
-                        .requestMatchers("/api/auth/refresh")
-                        .requestMatchers("/api/auth/test")
-                        .permitAll().anyRequest().authenticated())
+                        .antMatchers("/api/users/register").permitAll()
+                        .antMatchers("/api/users/login").permitAll()
+                        .antMatchers("/api/auth/refresh").permitAll()
+                        .antMatchers("/api/auth/test").permitAll()  // Добавляем тестовый маршрут
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
@@ -85,5 +93,26 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource()) {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                    throws ServletException, IOException {
+                response.setHeader("Access-Control-Allow-Origin", "*");
+                response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                response.setHeader("Access-Control-Allow-Headers", "*");
+                response.setHeader("Access-Control-Allow-Credentials", "true");
+                filterChain.doFilter(request, response);
+            }
+
+            @Override
+            public void init(FilterConfig filterConfig) throws ServletException {
+                super.init(filterConfig);
+                System.out.println("CORS Filter initialized");
+            }
+        };
     }
 }
