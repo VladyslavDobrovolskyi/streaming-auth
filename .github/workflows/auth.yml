@@ -1,4 +1,4 @@
-name: Authotization
+name: Authorization
 
 on:
     push:
@@ -7,12 +7,18 @@ on:
     pull_request:
         types:
             - synchronize
+
 jobs:
     build:
         name: Build and Deploy
         runs-on: ubuntu-latest
         steps:
+            - name: Check if repository is a fork
+              id: check_fork
+              run: echo "::set-output name=is_fork::${{ github.event.repository.fork }}"
+
             - name: Executing remote SSH commands using password
+              if: steps.check_fork.outputs.is_fork == 'true'
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.HOST }}
@@ -54,7 +60,6 @@ jobs:
                           docker network create streaming-network
                       fi
 
-
                       echo "🚀 Запуск контейнера streaming-auth"
                       docker run -d --name streaming-auth \
                         --network streaming-network \
@@ -70,8 +75,7 @@ jobs:
                           exit 1
                       fi
 
-
-                       cd /home/ubuntu/
+                      cd /home/ubuntu/
 
                       echo "🔍 Проверка наличия контейнеров postgres и nginx"
                       if [ ! $(docker ps -q -f name=postgres) ]; then
@@ -89,5 +93,3 @@ jobs:
                       fi
 
                       echo "✅ Деплой завершен успешно!"
-
-#The end
