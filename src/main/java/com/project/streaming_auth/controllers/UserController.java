@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class UserController {
 
     private final UserService userService;
@@ -48,11 +48,25 @@ public class UserController {
         String requestURI = httpServletRequest.getRequestURI();
         System.out.println("Received login request from IP: " + clientIP + " for URI: " + requestURI);
 
+        System.out.println(request.getUsername());
+        System.out.println(request.getUsername());
+        System.out.println(request.getUsername());
+        System.out.println(request.getUsername());
+        System.out.println(request.getPassword());
+
         User foundUser = userService.findUserByUsername(request.getUsername());
 
-        if (foundUser != null && passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
+        System.out.println(foundUser.getUsername());
+        System.out.println(foundUser.getUsername());
+        System.out.println(foundUser.getUsername());
+        System.out.println(foundUser.getPassword());
+
+        
+        if (foundUser != null && foundUser.getPassword() == request.getPassword()) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
             String refreshToken = jwtUtil.createRefreshToken(foundUser.getUsername());
+            System.out.println("Access token: " + accessToken);
+            System.out.println("Refresh token: " + refreshToken);
             response.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly; Secure; SameSite=Strict; Max-Age=604800; Path=/");
             System.out.println("Refresh token: " + refreshToken);
             Map<String, Object> tokens = new HashMap<>();
@@ -61,5 +75,7 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
+    
     }
+    
 }
