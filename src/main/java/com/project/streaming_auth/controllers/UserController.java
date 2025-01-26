@@ -50,7 +50,10 @@ public class UserController {
 
         User foundUser = userService.findUserByUsername(request.getUsername());
 
-        System.out.println(foundUser);
+        System.out.println(foundUser.getUsername());
+        System.out.println(foundUser.getUsername());
+        System.out.println(foundUser.getUsername());
+        System.out.println(foundUser.getUsername());
         
         if (foundUser != null && passwordEncoder.matches(passwordEncoder.encode(request.getPassword()), passwordEncoder.encode(foundUser.getPassword()))) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
