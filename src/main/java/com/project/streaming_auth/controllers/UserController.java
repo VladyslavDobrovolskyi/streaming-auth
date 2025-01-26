@@ -52,14 +52,15 @@ public class UserController {
         System.out.println(request.getUsername());
         System.out.println(request.getUsername());
         System.out.println(request.getUsername());
-        System.out.println(request.getUsername());
+        System.out.println(request.getPassword());
 
         User foundUser = userService.findUserByUsername(request.getUsername());
 
         System.out.println(foundUser.getUsername());
         System.out.println(foundUser.getUsername());
         System.out.println(foundUser.getUsername());
-        System.out.println(foundUser.getUsername());
+        System.out.println(foundUser.getPassword());
+
         
         if (foundUser != null && foundUser.getPassword() == request.getPassword()) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
