@@ -48,6 +48,12 @@ public class UserController {
         String requestURI = httpServletRequest.getRequestURI();
         System.out.println("Received login request from IP: " + clientIP + " for URI: " + requestURI);
 
+        System.out.println(request.getUsername());
+        System.out.println(request.getUsername());
+        System.out.println(request.getUsername());
+        System.out.println(request.getUsername());
+        System.out.println(request.getUsername());
+
         User foundUser = userService.findUserByUsername(request.getUsername());
 
         System.out.println(foundUser.getUsername());
