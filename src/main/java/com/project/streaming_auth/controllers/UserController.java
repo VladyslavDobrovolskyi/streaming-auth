@@ -61,7 +61,7 @@ public class UserController {
         System.out.println(foundUser.getUsername());
         System.out.println(foundUser.getUsername());
         
-        if (foundUser != null && passwordEncoder.matches(passwordEncoder.encode(request.getPassword()), passwordEncoder.encode(foundUser.getPassword()))) {
+        if (foundUser != null && foundUser.getPassword() == request.getPassword()) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
             String refreshToken = jwtUtil.createRefreshToken(foundUser.getUsername());
             response.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly; Secure; SameSite=Strict; Max-Age=604800; Path=/");
@@ -72,5 +72,7 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
+    
     }
+    
 }
