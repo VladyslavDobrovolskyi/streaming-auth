@@ -22,11 +22,11 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Test successful");
     }
+
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@CookieValue(name = "refreshToken", required = false) String refreshToken) {
         if (refreshToken == null) {
@@ -42,9 +42,6 @@ public class AuthController {
 
         // Попытка извлечь email из refresh token
         String email = jwtUtil.extractEmailFromRefreshToken(refreshToken);
-        if (email == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
-        }
 
         try {
             // Генерация нового access token
