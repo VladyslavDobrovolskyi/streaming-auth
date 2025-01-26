@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,20 +50,14 @@ public class UserController {
         System.out.println("Received login request from IP: " + clientIP + " for URI: " + requestURI);
 
         System.out.println(request.getUsername());
-        System.out.println(request.getUsername());
-        System.out.println(request.getUsername());
-        System.out.println(request.getUsername());
         System.out.println(request.getPassword());
 
         User foundUser = userService.findUserByUsername(request.getUsername());
 
         System.out.println(foundUser.getUsername());
-        System.out.println(foundUser.getUsername());
-        System.out.println(foundUser.getUsername());
         System.out.println(foundUser.getPassword());
 
-        
-        if (foundUser != null && foundUser.getPassword() == request.getPassword()) {
+        if (Objects.equals(foundUser.getPassword(), request.getPassword())) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
             String refreshToken = jwtUtil.createRefreshToken(foundUser.getUsername());
             System.out.println("Access token: " + accessToken);
