@@ -65,6 +65,8 @@ public class UserController {
         if (foundUser != null && foundUser.getPassword() == request.getPassword()) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
             String refreshToken = jwtUtil.createRefreshToken(foundUser.getUsername());
+            System.out.println("Access token: " + accessToken);
+            System.out.println("Refresh token: " + refreshToken);
             response.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly; Secure; SameSite=Strict; Max-Age=604800; Path=/");
             System.out.println("Refresh token: " + refreshToken);
             Map<String, Object> tokens = new HashMap<>();
