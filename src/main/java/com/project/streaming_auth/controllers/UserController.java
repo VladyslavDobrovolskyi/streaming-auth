@@ -50,7 +50,9 @@ public class UserController {
 
         User foundUser = userService.findUserByUsername(request.getUsername());
 
-        if (foundUser != null && passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
+        System.out.println(foundUser);
+        
+        if (foundUser != null && passwordEncoder.matches(passwordEncoder.encode(request.getPassword()), passwordEncoder.encode(foundUser.getPassword()))) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
             String refreshToken = jwtUtil.createRefreshToken(foundUser.getUsername());
             response.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; HttpOnly; Secure; SameSite=Strict; Max-Age=604800; Path=/");
