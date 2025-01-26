@@ -32,15 +32,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/auth/refresh", "/api/auth/test"))  // Отключаем CSRF для определенных маршрутов
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/refresh", "/api/auth/test").permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(withDefaults())
-                .formLogin(withDefaults())
-                .build();
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/auth/refresh", "/api/auth/test"))  // Отключаем CSRF для определенных маршрутов
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/refresh", "/api/auth/test").permitAll()
+                .anyRequest().authenticated())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .formLogin(withDefaults())
+            .build();
     }
 
     @Bean
