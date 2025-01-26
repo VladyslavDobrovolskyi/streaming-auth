@@ -32,9 +32,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/auth/refresh", "/api/auth/test"))  // Отключаем CSRF для определенных маршрутов
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/auth/refresh", "/api/auth/test","/api/auth/login" ))  // Отключаем CSRF для определенных маршрутов
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/refresh", "/api/auth/test").permitAll()
+                .requestMatchers("/api/auth/refresh", "/api/auth/test", "/api/auth/login").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
