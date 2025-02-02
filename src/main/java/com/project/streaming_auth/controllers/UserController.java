@@ -49,15 +49,12 @@ public class UserController {
         String requestURI = httpServletRequest.getRequestURI();
         System.out.println("Received login request from IP: " + clientIP + " for URI: " + requestURI);
 
-        System.out.println(request.getUsername());
-        System.out.println(request.getPassword());
+  
 
         User foundUser = userService.findUserByUsername(request.getUsername());
 
-        System.out.println(foundUser.getUsername());
-        System.out.println(foundUser.getPassword());
-
-        if (Objects.equals(foundUser.getPassword(), request.getPassword())) {
+        
+        if (Objects.nonNull(foundUser) && passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
             String refreshToken = jwtUtil.createRefreshToken(foundUser.getUsername());
             System.out.println("Access token: " + accessToken);
