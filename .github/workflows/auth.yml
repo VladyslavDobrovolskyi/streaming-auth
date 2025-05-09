@@ -17,16 +17,16 @@ jobs:
               id: check_fork
               run: echo "::set-output name=is_fork::${{ github.event.repository.fork }}"
 
-            - name: Executing remote SSH commands using password
+            - name: Executing remote SSH commands using key
               if: steps.check_fork.outputs.is_fork == 'true'
-              uses: appleboy/ssh-action@v1.0.3
+              uses: appleboy/ssh-action@v1.2.2
               with:
                   host: ${{ secrets.HOST }}
                   username: ${{ secrets.USERNAME }}
-                  password: ${{ secrets.PASSWORD }}
+                  key: ${{ secrets.KEY }}
                   port: ${{ secrets.PORT }}
                   script: |
-                      cd /home/ubuntu/
+                      cd /home/vdobrovolskyi/watchtogether.fun
                       echo "🔄 Cтягиваем код с github"
                       echo "🗑 Очищаем следы прошлых запусков, если имеются"
                       if [ -d "streaming-auth" ]; then
