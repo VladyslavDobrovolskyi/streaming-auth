@@ -64,7 +64,7 @@ jobs:
                       docker run -d --name streaming-auth \
                         --network watchtogether-network \
                         --restart always \
-                        -p 5555:5555 \
+                        -p 20555:20555 \
                         streaming-auth
 
                       echo "🔍 Проверка, что контейнер streaming-auth поднялся"
