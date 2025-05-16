@@ -53,6 +53,8 @@ public class UserController {
 
         User foundUser = userService.findUserByUsername(request.getUsername());
 
+        System.out.println("Found user: " + foundUser);
+
         
         if (Objects.nonNull(foundUser) && passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
             String accessToken = jwtUtil.createAccessToken(foundUser.getUsername());
